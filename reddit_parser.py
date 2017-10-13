@@ -19,13 +19,39 @@ def get_posts(subreddits, limit, user_agent=default_user_agent):
 
     return all_posts
 
-def get_post_comments(post_url, user_agent=default_user_agent):
+def format_posts(posts):
+    """Returns a list of posts with the desired extracted fields"""
+    formatted_posts = []
+
+    for post in posts:
+        post_data = post['data']
+        formatted_post = {
+            "title": post_data['title'],
+            "post_id": post_data['id'],
+            "subreddit": post_data['subreddit'],
+            "score": post_data['score'],
+            "url": post_data['url'],
+            "author": post_data['author'],
+            "permalink": format_post_permalink(post_data['permalink'])
+        }
+
+        formatted_posts.append(formatted_post)
+
+    return formatted_posts
+
+def format_post_permalink(post_permalink):
+    """Returns a formatted url for the post json"""
+    return 'https://www.reddit.com' + post_permalink + '.json' 
+
+def get_post_comments(post, user_agent=default_user_agent):
     """Returns the comment data for a specified post."""
-    response_data = requests.get(post_url, headers = {'User-agent': user_agent})
+    post_permalink = post['permalink']
+
+    response_data = requests.get(post_permalink, headers = {'User-agent': user_agent})
     post_data = response_data.json()[1]
 
     # right now this gets the title, eventually convert to unique id for each title
-    post_id = response_data.json()[0]['data']['children'][0]['data']['title']
+    post_id = post['post_id']
 
     return get_post_comments_recur(post_data, [], -1, post_id)
 
@@ -74,9 +100,7 @@ if __name__ == "__main__":
 
     posts = get_posts(subreddits, limit)
 
-    post_url = 'https://www.reddit.com' + posts[0]['data']['permalink'] + '.json'
+    formatted_posts = format_posts(posts)
 
-    print(post_url)
-
-    post_comments = get_post_comments(post_url)
+    post_comments = get_post_comments(formatted_posts[0])
     print(json.dumps(post_comments))
