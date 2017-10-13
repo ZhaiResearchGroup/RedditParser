@@ -32,7 +32,8 @@ def format_posts(posts):
             "score": post_data['score'],
             "url": post_data['url'],
             "author": post_data['author'],
-            "permalink": format_post_permalink(post_data['permalink'])
+            "permalink": format_post_permalink(post_data['permalink']),
+            "num_comments": post_data['num_comments']
         }
 
         formatted_posts.append(formatted_post)
@@ -101,6 +102,8 @@ if __name__ == "__main__":
     posts = get_posts(subreddits, limit)
 
     formatted_posts = format_posts(posts)
+
+    # print(json.dumps(formatted_posts))
 
     post_comments = get_post_comments(formatted_posts[0])
     print(json.dumps(post_comments))
