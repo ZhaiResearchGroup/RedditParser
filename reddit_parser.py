@@ -33,7 +33,8 @@ def format_posts(posts):
             "url": post_data['url'],
             "author": post_data['author'],
             "permalink": format_post_permalink(post_data['permalink']),
-            "num_comments": post_data['num_comments']
+            "num_comments": post_data['num_comments'],
+            "created": post_data['created']
         }
 
         formatted_posts.append(formatted_post)
@@ -77,11 +78,12 @@ def get_post_comments_recur(comment, comments, parent_comment_id, parent_post_id
                 "author": comment_data['author'],
                 "parent_comment_id": parent_comment_id,
                 "parent_post_id": parent_post_id,
-                "id": str(uuid.uuid4())
+                "created": comment_data['created'],
+                "comment_id": comment_data['id']
             }
             comments.append(new_comment)
 
-        next_parent_comment_id = parent_comment_id if new_comment is None else new_comment['id']
+        next_parent_comment_id = parent_comment_id if new_comment is None else new_comment['comment_id']
 
         # recurse on children
         if 'children' in comment_data:
@@ -103,7 +105,7 @@ if __name__ == "__main__":
 
     formatted_posts = format_posts(posts)
 
-    # print(json.dumps(formatted_posts))
+    print(json.dumps(formatted_posts))
 
-    post_comments = get_post_comments(formatted_posts[0])
-    print(json.dumps(post_comments))
+    # post_comments = get_post_comments(formatted_posts[0])
+    # print(json.dumps(post_comments))
