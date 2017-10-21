@@ -34,7 +34,8 @@ def format_posts(posts):
             "author": post_data['author'],
             "permalink": format_post_permalink(post_data['permalink']),
             "num_comments": post_data['num_comments'],
-            "created": post_data['created']
+            "created": post_data['created'],
+            "body": post_data['selftext']
         }
 
         formatted_posts.append(formatted_post)
