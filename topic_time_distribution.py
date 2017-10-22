@@ -136,15 +136,15 @@ if __name__ == "__main__":
 
     # plotting is messed up.
 
-    # topic_counts = format_topic_counts(time_topic_distribution)
+    topic_counts = format_topic_counts(time_topic_distribution)
 
-    # num_bars = len(timestamps)
-    # width = .35
-    # for topic_count in topic_counts:
-    #     plt.bar(num_bars, topic_count, width)
+    num_bars = len(timestamps)
+    width = .35
+    for topic_count in topic_counts:
+        plt.bar(num_bars, topic_count, width)
 
-    # plt.xlabel('Times')
-    # plt.ylabel('Topic Counts')
-    # plt.xticks(np.arange(num_bars), datetime_stamps)
-    # plt.yticks(np.arange(0, 10, 1))
-    # plt.show()
+    plt.xlabel('Times')
+    plt.ylabel('Topic Counts')
+    plt.xticks(np.arange(num_bars), datetime_stamps)
+    plt.yticks(np.arange(0, 10, 1))
+    plt.show()
