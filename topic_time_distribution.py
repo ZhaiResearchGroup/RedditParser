@@ -141,7 +141,7 @@ if __name__ == "__main__":
     num_bars = len(timestamps)
     width = .35
     for topic_count in topic_counts:
-        plt.bar(num_bars, topic_count, width)
+        plt.hist(num_bars, topic_count, width)
 
     plt.xlabel('Times')
     plt.ylabel('Topic Counts')

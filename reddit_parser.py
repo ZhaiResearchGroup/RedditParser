@@ -10,6 +10,7 @@ def get_posts(subreddits, limit, user_agent=default_user_agent):
     all_posts = []
 
     for subreddit in subreddits:
+        print subreddit
         data_url = 'https://www.reddit.com/r/{}.json?limit={}'.format(subreddit, limit)
         response_data = requests.get(data_url, headers = {'User-agent': user_agent})
 
@@ -98,7 +99,12 @@ def get_post_comments_recur(comment, comments, parent_comment_id, parent_post_id
     return comments
 
 if __name__ == "__main__":
-    subreddits = ['news', 'worldnews', 'programmerhumor']
+
+    subreddits = []
+    with open('subreddits.txt', 'r') as f:
+        subreddits = f.read().split('\n')
+
+    print subreddits
     limit = 500
     user_agent = 'ResearchBot'
 
@@ -108,5 +114,5 @@ if __name__ == "__main__":
 
     print(json.dumps(formatted_posts))
 
-    # post_comments = get_post_comments(formatted_posts[0])
-    # print(json.dumps(post_comments))
+    post_comments = get_post_comments(formatted_posts[0])
+    print(json.dumps(post_comments))
