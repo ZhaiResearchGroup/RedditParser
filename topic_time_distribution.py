@@ -5,7 +5,11 @@ import reddit_parser
 
 from datetime import datetime, timedelta
 import sys
+import time
 from matplotlib import pyplot as plt
+from nltk.corpus import stopwords
+
+cachedStopWords = set(stopwords.words("english"))
 
 def get_bodies(items):
     """Gets all of the bodies associated with inputted posts or comments"""
@@ -18,6 +22,8 @@ def concatenate_comments_to_post(post_body, comments):
 
     for comment in comment_bodies:
         document += "\n" + comment
+
+    document = ' '.join([word for word in document.split() if word not in cachedStopWords])
 
     return document
 
@@ -58,7 +64,7 @@ def generate_time_range(min_time, max_time, num_topics):
 
 def increment_time_range_for_topic(time_topic_distribution, topic, timestamp):
     """Increments the topic count at a specific time in the distribution"""
-    for time in time_topic_distribution:
+    for time in sorted(time_topic_distribution.keys()):
         if timestamp < time:
             time_topic_distribution[time][topic] += 1
             break
@@ -129,22 +135,19 @@ if __name__ == "__main__":
         doc_timestamp = timestamps[i]
         doc_datetime = datetime.fromtimestamp(doc_timestamp)
         document_topic = document_topics[i]
-
+        #print doc_datetime
         increment_time_range_for_topic(time_topic_distribution, document_topic, doc_datetime)
-
-    print(time_topic_distribution)
-
-    # plotting is messed up.
 
     topic_counts = format_topic_counts(time_topic_distribution)
 
     num_bars = len(timestamps)
     width = .35
     for topic_count in topic_counts:
-        plt.hist(num_bars, topic_count, width)
+        counts = [[int(tc) for tc in tcs] for tcs in topic_counts]
+        plt.hist(counts)
 
     plt.xlabel('Times')
     plt.ylabel('Topic Counts')
-    plt.xticks(np.arange(num_bars), datetime_stamps)
-    plt.yticks(np.arange(0, 10, 1))
+    #plt.xticks(np.arange(6), datetime_stamps)
+    #plt.yticks(np.arange(0, 10, 1))
     plt.show()
