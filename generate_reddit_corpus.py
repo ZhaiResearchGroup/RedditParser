@@ -1,32 +1,19 @@
-import json
-from pprint import pprint
 import nltk
 from nltk.corpus import stopwords
+from reddit_data_reader import read_reddit_data_and_timestamps
+from reddit_data_dump import get_reddit_data, dump_reddit_data
 
-def load_comments(file_path):
+def extract_sentences(documents):
     '''
-        Takes a 'post comments' file from reddit_parser.py and loads it in
+        Extracts all the sentences from a list of reddit-data documents
     '''
-    with open(file_path) as comments_file:
-        comments = json.load(comments_file)
-        comments_file.close()
+    sentences = []
+    for document in documents:
+        words = [str(word, 'utf-8') for word in document]
+        text_document = ' '.join(words)
+        sentences += nltk.sent_tokenize(text_document)
 
-    return comments
-
-def build_document(comments):
-    '''
-        Takes a list of comment jsons and builds a document from it
-
-        Returns a string of the entire document
-    '''
-    comment_strings = [_get_clean_body(comment) for comment in comments]
-    return ' '.join(comment_strings)
-
-def extract_sentences(document):
-    '''
-        Extract sentences from a document using nltk
-    '''
-    return nltk.sent_tokenize(document)
+    return sentences
 
 def dump_sentences(sentences, file_path):
     '''
@@ -36,12 +23,6 @@ def dump_sentences(sentences, file_path):
         for sentence in sentences:
             out_file.write(sentence + '\n')
         out_file.close()
-
-def _get_clean_body(comment):
-    '''
-        Takes a comment object and returns a cleaned body
-    '''
-    return comment['body'].replace('\n', ' ').strip()
 
 def _remove_stopwords_and_clean_sentences(sentences):
     '''
@@ -61,7 +42,6 @@ def _remove_stopwords_and_clean_sentences(sentences):
     return cleaned_sentences
 
 if __name__ == "__main__":
-    comments = load_comments('output.json')
-    document = build_document(comments)
-    sentences = extract_sentences(document)
-    dump_sentences(sentences, 'corpus.dat')
+    documents, timestamps, unique_words = read_reddit_data_and_timestamps('reddit_documents.txt', 'timestamps.txt', 'stopwords.txt')
+    sentences = extract_sentences(documents)
+    dump_sentences(sentences, 'reddit_corpus.dat')

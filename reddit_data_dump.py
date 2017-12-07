@@ -17,7 +17,7 @@ def get_reddit_data(subreddits, limit):
 
     timestamps = [post["created"] for post in posts]
     documents = build_documents(zip(posts, post_bodies))
-    
+
     return documents, timestamps
 
 def dump_reddit_data(documents, timestamps, documents_path, timestamps_path):
@@ -30,7 +30,7 @@ def dump_reddit_data(documents, timestamps, documents_path, timestamps_path):
     """
     with open(documents_path, 'wb') as outfile:
         for document in documents:
-            outfile.write((document.replace('\n', '') + "\n").encode("utf-8"))
+            outfile.write((document.replace('\n', ' ') + "\n").encode("utf-8"))
 
         outfile.close()
 
@@ -48,5 +48,3 @@ if __name__ == "__main__":
 
     documents, timestamps = get_reddit_data(subreddits, limit)
     dump_reddit_data(documents, timestamps, reddit_data_file, timestamps_file)
-
-    

@@ -10,7 +10,7 @@ def get_posts(subreddits, limit, user_agent=default_user_agent):
     all_posts = []
 
     for subreddit in subreddits:
-        print subreddit
+        print(subreddit)
         data_url = 'https://www.reddit.com/r/{}.json?limit={}'.format(subreddit, limit)
         response_data = requests.get(data_url, headers = {'User-agent': user_agent})
 
@@ -45,7 +45,7 @@ def format_posts(posts):
 
 def format_post_permalink(post_permalink):
     """Returns a formatted url for the post json"""
-    return 'https://www.reddit.com' + post_permalink + '.json' 
+    return 'https://www.reddit.com' + post_permalink + '.json'
 
 def get_post_comments(post, user_agent=default_user_agent):
     """Returns the comment data for a specified post."""
@@ -61,9 +61,9 @@ def get_post_comments(post, user_agent=default_user_agent):
 
 def get_post_comments_recur(comment, comments, parent_comment_id, parent_post_id):
     """Recursive helper function to gather all comments in a Reddit thread.
-    
+
     Right now this function is only getting 200 comments because that is all is shown on the
-    JSON page for the post. There are properties called 'more' with lists of id's. Perhaps 
+    JSON page for the post. There are properties called 'more' with lists of id's. Perhaps
     those can be a link to a complete set of comments.
     """
     if 'data' in comment:
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     with open('subreddits.txt', 'r') as f:
         subreddits = f.read().split('\n')
 
-    print subreddits
+    print(subreddits)
     limit = 500
     user_agent = 'ResearchBot'
 
